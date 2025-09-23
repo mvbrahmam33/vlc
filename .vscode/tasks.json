@@ -1,0 +1,48 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Win64: build (gcc + prebuilt)",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-lc",
+        "scripts/win/build-win64.sh --gcc --use-prebuilt -a x86_64 -j 8"
+      ],
+      "problemMatcher": ["$gcc"],
+      "group": "build"
+    },
+    {
+      "label": "Win64: build (llvm + prebuilt)",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-lc",
+        "scripts/win/build-win64.sh --llvm /opt/llvm-mingw/bin --use-prebuilt -a x86_64 -j 8 -d"
+      ],
+      "problemMatcher": ["$gcc"],
+      "group": "build"
+    },
+    {
+      "label": "Win64: libvlc only (fast)",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-lc",
+        "scripts/win/build-win64.sh --gcc -z -a x86_64 -j 8"
+      ],
+      "problemMatcher": ["$gcc"],
+      "group": "build"
+    },
+    {
+      "label": "Win64: package (install layout)",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-lc",
+        "cd win64 && make package-win-common"
+      ],
+      "problemMatcher": ["$gcc"]
+    }
+  ]
+}
