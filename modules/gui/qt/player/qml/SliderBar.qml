@@ -25,6 +25,7 @@ import VLC.Widgets as Widgets
 import VLC.Style
 import VLC.Util
 import VLC.MainInterface
+import QtQuick.Window
 
 T.ProgressBar {
     id: control
@@ -98,6 +99,52 @@ T.ProgressBar {
 
         pos: Qt.point(hoverHandler.hovered ? Helpers.clamp(hoverHandler.point.position.x, 0, control.availableWidth)
                                                         : (control.visualPosition * control.width), 0)
+    }
+
+    // Thumbnail preview popup above the seek bar, like YouTube
+    Popup {
+        id: thumbPopup
+        // Only show when hovering and a video is actually loaded
+        visible: hoverHandler.hovered && Player.hasVideoOutput
+        modal: false
+        focus: false
+        padding: VLCStyle.margin_xsmall
+        x: Helpers.clamp(hoverHandler.point.position.x - width/2, 0, control.availableWidth - width)
+        y: -height - VLCStyle.dp(6)
+        background: Rectangle {
+            // Use existing, exported style radius and a valid background color role
+            radius: VLCStyle.gridCover_radius
+            color: theme.bg.secondary
+            border.color: theme.border
+            border.width: 1
+        }
+
+        contentItem: Column {
+            spacing: VLCStyle.margin_xxsmall
+            Image {
+                id: thumbImage
+                width: VLCStyle.dp(192)
+                height: VLCStyle.dp(108)
+                fillMode: Image.PreserveAspectFit
+                cache: false
+                asynchronous: true
+        // Avoid issuing thumbnail requests before media is available
+        source: (Player.hasVideoOutput && Player.url && Player.url !== "")
+            ? Thumbnailer.buildSource(Player.url,
+                          hoverHandler.hovered ? hoverHandler.point.position.x / control.width : Player.position,
+                          width, height, true, false)
+            : ""
+            }
+            // Small timestamp under the thumbnail
+            Text {
+                text: Player.length.scale(hoverHandler.hovered ? hoverHandler.point.position.x / control.width : Player.position)
+                                 .formatHMS(Player.length.isSubSecond() ? VLCTick.SubSecondFormattedAsMS : 0)
+                color: theme.fg.primary
+                font.pixelSize: VLCStyle.fontSize_normal
+                horizontalAlignment: Text.AlignHCenter
+                width: parent.width
+            }
+        }
     }
 
     FSM {

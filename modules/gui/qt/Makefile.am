@@ -86,6 +86,7 @@ endif
 
 libqt_plugin_la_SOURCES = \
 	qt.cpp qt.hpp plugins.hpp \
+	thumbnailer.cpp thumbnailer.hpp \
 	dialogs/bookmarks/bookmarks.cpp dialogs/bookmarks/bookmarks.hpp \
 	dialogs/dialogs/dialogmodel.cpp \
 	dialogs/dialogs/dialogmodel.hpp \
@@ -380,6 +381,7 @@ moc_verbose__0 = $(moc_verbose_0)
 dialogs/dialogs_provider.moc.cpp dialogs/vlm/vlm.moc.cpp: $(top_builddir)/config.h
 
 nodist_libqt_plugin_la_SOURCES = \
+	thumbnailer.moc.cpp \
 	dialogs/bookmarks/bookmarks.moc.cpp \
 	dialogs/dialogs/dialogmodel.moc.cpp \
 	dialogs/dialogs_provider.moc.cpp \
