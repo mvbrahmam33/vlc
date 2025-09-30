@@ -77,11 +77,6 @@ FocusScope {
     Item {
         anchors.fill: background
 
-        // TODO: Clipping should not be necessary, we can crop like
-        //       `ImageExt` is doing for `PreserveAspectCrop`, but
-        //       `DualKawaseBlur` does not support that for now.
-        clip: !blurEffect.sourceNeedsLayering
-
         visible: (GraphicsInfo.shaderType === GraphicsInfo.RhiShader)
 
         // This blur effect does not create an implicit layer that is updated
@@ -117,6 +112,11 @@ FocusScope {
 
                 source: blurEffect.sourceNeedsLayering ? backgroundLayer : background
             }
+
+            // Instead of clipping in the parent, denote the viewport here so we both
+            // do not need to clip the excess, and also save significant video memory:
+            viewportRect: !blurEffect.sourceNeedsLayering ? Qt.rect((width - parent.width) / 2, (height - parent.height) / 2, parent.width, parent.height)
+                                                          : Qt.rect(0, 0, 0, 0)
 
             ShaderEffectSource {
                 id: backgroundLayer
